@@ -22,7 +22,7 @@
             if (!/[a-z ']/i.test(String.fromCharCode(e.which)) && e.which !== 16)
                 e.preventDefault();
             pressedKey = parseInt(String.fromCharCode(e.which));
-            if (!raining && pressedKey <= 3 && pressedKey >= 0) {
+            if (!raining && pressedKey <= 5 && pressedKey >= 0) {
                 level = pressedKey;
                 startRain();
             }
@@ -34,7 +34,7 @@
                 var words = $('#customText').val().replace(/[^a-zA-Z\r\n ']+/g,'').replace(/[']+/g,'0');
                 wordArray =  words.match(/[a-zA-Z0]+/g);
             }
-            $('#main').focus();
+            $('#customText').blur();
             $('#menu').velocity("fadeOut", { duration: 1500 });
             $('#win').velocity("fadeOut", { duration: 1500 });
             raining = true;
@@ -203,7 +203,7 @@
     <div id='menu'>
         <p>RainTyper</p>
         <textarea id='customText' placeholder='Enter Raining Text...'></textarea>
-        <p>Choose your difficulty to start [1|2|3]</p>
+        <p>Press a number to choose your difficulty<br />[ 1 - 5 ]</p>
     </div>
     <div id='win'>Congragulations! You completed level <span id='level'></span>!</div>
     <hr>
