@@ -178,20 +178,24 @@
         var wordArray;
     </script>
     <style>
-        body {width:100%;height:100%;position:absolute;margin:0px;padding:0px;font:48px arial;font-weight:bold;background-color:black;overflow:hidden;color:white;}
+        body {width:100%;height:100%;position:absolute;margin:0px;padding:0px;font:72px arial;font-weight:bold;background-color:black;overflow:hidden;color:white;}
         #main {width:100%;height:100%;position:absolute;margin:0px;padding:0px;}
-        #points {top:0px;left:0px;position:absolute;font:72px arial;font-weight:bold;}
-        #pointstext {top:0px;left:3px;position:absolute;font:12px arial;font-weight:bold;}
-        #input {bottom:0px;left:0px;position:absolute;font:72px arial;font-weight:bold;}
-        #acc {bottom:0px;right:0px;position:absolute;font:72px arial;font-weight:bold;}
-        #acctext {bottom:70px;right:5px;position:absolute;font:12px arial;font-weight:bold;}
-        #wpmtext {top:0px;right:5px;position:absolute;font:12px arial;font-weight:bold;}
-        #wpm {top:0px;right:0px;position:absolute;font:72px arial;font-weight:bold;}
-        #menu {top:250px;text-align:center;width:100%;height:200px;position:absolute;font:24px arial;font-weight:bold;}
-        #win {top:150px;text-align:center;width:100%;position:absolute;font:36px arial;font-weight:bold;display:none;}
-        #customText {width:500px;height:100%;background-color:DimGrey;border:0px;resize:none;color:white;padding:10px;}
-        hr {position:absolute;color:red;bottom:0px;width:100%;border:2px solid Red;padding:0;margin:0;}
-        .rain {position:absolute;bottom:100%;color:DimGrey;margin:0px;width:100%;line-height:0px;padding:0px;text-align:center;}
+        #points {top:0px;left:0px;position:absolute;font-size:100%;font-weight:bold;}
+        #pointstext {top:0px;left:3px;position:absolute;font-size:17%;font-weight:bold;}
+        #input {left:0px;position:absolute;font-size:100%;font-weight:bold;}
+        #acc {right:0px;position:absolute;font-size:100%;font-weight:bold;}
+        #acctext {right:5px;position:absolute;font-size:17%;font-weight:bold;line-height:20px;}
+        #wpmtext {top:0px;right:5px;position:absolute;font-size:17%;font-weight:bold;}
+        #wpm {top:0px;right:0px;position:absolute;font-size:100%;font-weight:bold;}
+        .bottom {bottom:0px;}
+        #menu {top:15%;text-align:center;width:100%;height:20%;position:absolute;font-size:30%;font-weight:bold;}
+        #win {top:10%;text-align:center;width:100%;position:absolute;font-size:30%;font-weight:bold;display:none;}
+        #customText {width:30%;height:100%;background-color:DimGrey;border:0px;resize:none;color:white;padding:10px;outline-width:0;}
+        hr {position:absolute;color:red;width:100%;border:2px solid Red;padding:0;margin:0;}
+        .rain {position:absolute;bottom:105%;color:DimGrey;margin:0px;width:100%;line-height:0px;padding:0px;text-align:center;}
+        #inputText {position:absolute;bottom:30px;height:30px;width:100%;padding:0px;outline-width:0;display:none;background-color:rgba(0, 0, 0, 0);color:white;border:0px;margin:0px;}
+        #mobileHelp {font-size:70%;}
+        .mobile {display:none;}
     </style>
     </head>
     <body>
@@ -206,9 +210,9 @@
         <p>Press a number to choose your difficulty<br />[ 1 - 5 ]</p>
     </div>
     <div id='win'>Congragulations! You completed level <span id='level'></span>!</div>
-    <hr>
-    <div id='input'></div>
-    <div id='acctext'>Accuracy</div>
-    <div id='acc'>100</div>
+    <hr class='bottom'>
+    <div id='input' class='bottom'></div>
+    <div id='acctext' class='bottom'>Accuracy</div>
+    <div id='acc' class='bottom'>100</div>
     </body>
 </html>
