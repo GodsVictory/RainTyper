@@ -53,7 +53,7 @@
             $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*(30000-10000)+10000|0)/level, easing: "linear", complete: function() {
                         $(this).addClass('red').velocity({scale: 0}, { duration: 200, complete: function() {
-                            $(this).text('-'+word.length).css({ 'color':'Red', 'font-size':'24px' });
+                            $(this).text('-'+word.length).css({ 'color':'Red', 'font-size':'33%' });
                         }})
                         .velocity({ scale: 1 }, { duration: 200 })
                         .velocity({left: '-50%', top: '0px'},{ duration: 'slow', easing: [.76,0,.76,0], complete: function(){
@@ -82,7 +82,7 @@
                     $('.'+word).not('.green, .red').each(function() {
                         $(this).velocity("stop")
                         .velocity({scale: 0}, { duration: 200, complete: function() {
-                            $(this).text('+'+word.length).addClass('green').css({ 'color':'LawnGreen', 'font-size':'24px' });
+                            $(this).text('+'+word.length).addClass('green').css({ 'color':'LawnGreen', 'font-size':'33%' });
                         }})
                         .velocity({ scale: 1 }, { duration: 200 })
                         .velocity({left: '-50%', top: '0px'},{ duration: 'slow', easing: [.76,0,.76,0], complete: function(){
@@ -192,10 +192,8 @@
         #win {top:10%;text-align:center;width:100%;position:absolute;font-size:30%;font-weight:bold;display:none;}
         #customText {width:30%;height:100%;background-color:DimGrey;border:0px;resize:none;color:white;padding:10px;outline-width:0;}
         hr {position:absolute;color:red;width:100%;border:2px solid Red;padding:0;margin:0;}
-        .rain {position:absolute;bottom:105%;color:DimGrey;margin:0px;width:100%;line-height:0px;padding:0px;text-align:center;}
+        .rain {position:absolute;bottom:105%;color:DimGrey;margin:0px;width:100%;line-height:0px;padding:0px;text-align:center;font-size:75%;}
         #inputText {position:absolute;bottom:30px;height:30px;width:100%;padding:0px;outline-width:0;display:none;background-color:rgba(0, 0, 0, 0);color:white;border:0px;margin:0px;}
-        #mobileHelp {font-size:70%;}
-        .mobile {display:none;}
     </style>
     </head>
     <body>
