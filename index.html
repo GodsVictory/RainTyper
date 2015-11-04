@@ -6,12 +6,11 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <script>
         $(document).ready(function() {
-            for (var i = 0;i < 1000;i++) randomArray.push((Math.random()*(80-5)+5|0));
-
             setInterval(function() {
                 $('#wpm').text(wpm*12);
                 wpm = 0;
             },5000);
+            $('#customText').focus();
         });
 
         $(document).on("keydown", function (e) {
@@ -20,7 +19,7 @@
         });
         
         $(document).on("keypress", function (e) {
-            if (!/[a-z ]/i.test(String.fromCharCode(e.which)) && e.which !== 16)
+            if (!/[a-z ']/i.test(String.fromCharCode(e.which)) && e.which !== 16)
                 e.preventDefault();
             pressedKey = parseInt(String.fromCharCode(e.which));
             if (!raining && pressedKey <= 3 && pressedKey >= 0) {
@@ -29,20 +28,15 @@
             }
         });
         
-        function getRandom() {
-            return ++randomKey >= randomArray.length ? randomArray[randomKey=0] : randomArray[randomKey];
-        }        
-        function getRandomWord() {
-            return ++wordKey >= wordArray.length ? wordArray[wordKey=0] : wordArray[wordKey];
-        }
-
         function startRain() {
-            if ($('#customText').val() == '') {
-                return;
-            } else {
-                wordArray =  $('#customText').val().match(/[a-zA-Z]+/g);
+            if ($('#customText').val() == '') return;
+            else {
+                var words = $('#customText').val().replace(/[^a-zA-Z\r\n ']+/g,'').replace(/[']+/g,'0');
+                wordArray =  words.match(/[a-zA-Z0]+/g);
             }
+            $('#main').focus();
             $('#menu').velocity("fadeOut", { duration: 1500 });
+            $('#win').velocity("fadeOut", { duration: 1500 });
             raining = true;
             restart();
             rain = setInterval(rainTimer, 3000/level);
@@ -54,7 +48,8 @@
         };
         
         function rainTimer() {
-            var word = getRandomWord();
+        if (count == wordArray.length) return;
+            var word = wordArray[count];
             $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*(30000-10000)+10000|0)/level, easing: "linear", complete: function() {
                         $(this).addClass('red').velocity({scale: 0}, { duration: 200, complete: function() {
@@ -66,12 +61,13 @@
                             points -= word.length;
                             if (points < 0) points = 0;
                             $('#points').text(points);
+                            if (count == wordArray.length) win();
                         }});
                     }})
 
             charArray = word.split('');
             $.each(charArray, function(i,val) {
-                $('<span class="'+i+'">'+val+'</span>').appendTo('p.'+count);
+            val == 0 ? $('<span class="'+i+'">\'</span>').appendTo('p.'+count) : $('<span class="'+i+'">'+val+'</span>').appendTo('p.'+count);
             });
             count++;
             paintRain(input, pos);
@@ -96,9 +92,7 @@
                         }});
                     });
                     wpm = Math.round(word.length/5);
-                    if (points >= 100) {
-                        win();
-                    }
+                    if (count == wordArray.length) win();
                 }
                 input = '';
                 pos = -1;
@@ -107,8 +101,8 @@
                 error = false;
                 return;
             }
-            else if (!(/[a-zA-Z]/i).test(inChar)) return;
-            else { input = input+inChar; pos++; }
+            else if (!(/[a-zA-Z']/i).test(inChar)) return;
+            else { if (inChar == "'") {input = input+"0"; pos++; } else { input = input+inChar; pos++; }}
 
             if (error) {
                 input = input.slice(0, -1);
@@ -157,6 +151,7 @@
         }
         
         function restart() {
+            count = 0;
             points = 0;
             $('#points').text(points);
             acc = 100;
