@@ -7,10 +7,10 @@
     <script>
         $(document).ready(function() {
             setInterval(function() {
-                wpmArray.push(wpm);
-                wpm = Math.round(wpmArray.reduce(function(a,b) { return a + b; }) / wpmArray.length);
-                $('#wpm').text(wpm*12);
+                wpmArray.push(wpm/5*12);
                 wpm = 0;
+                var wpmAvg = Math.round(wpmArray.reduce(function(a,b) { return a + b; }) / wpmArray.length);
+                $('#wpm').text(wpmAvg);
             },5000);
             $('#customText').focus();
             var isMobile = false;
@@ -109,7 +109,7 @@
             else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
             else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');;
             $('#acc').text(getAccuracy(input.length-1, paintRain(input, input.length-1)));
-            wpm += Math.round(input.length/5);
+            wpm++;
         }
         
         function paintRain(word, i) {
