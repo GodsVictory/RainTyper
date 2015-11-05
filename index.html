@@ -7,6 +7,8 @@
     <script>
         $(document).ready(function() {
             setInterval(function() {
+                wpmArray.push(wpm);
+                wpm = Math.round(wpmArray.reduce(function(a,b) { return a + b; }) / wpmArray.length);
                 $('#wpm').text(wpm*12);
                 wpm = 0;
             },5000);
@@ -111,13 +113,11 @@
         }
         
         function paintRain(word, i) {
-console.log(word);
             var spansW = $('p[class^="'+word+'"] span').filter(function(){
                 return parseInt($(this).attr('class')) <= i;
             });
             $('p span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
-console.log(i+' '+spansW.length);
             if (i >= spansW.length) {
                 var spansR = $('p[class^="'+word.slice(0, -1)+'"] span').filter(function(){
                     return parseInt($(this).attr('class')) <= i;
@@ -171,14 +171,12 @@ console.log(i+' '+spansW.length);
         var rmCount = 0;
         var points = 0;
         var wpm = 0;
+        var wpmArray = [];
         var totalCorrect = 1;
         var totalInput = 1;
         var acc = 0;
         var error = false;
-        var randomArray = [];
-        var randomKey = -1;
-        var wordKey = -1;
-        var wordArray;
+        var wordArray = [];
     </script>
     <style>
         body {width:100%;height:100%;position:absolute;margin:0px;padding:0px;font:72px arial;font-weight:bold;background-color:black;background-image:url('bg.png');overflow:hidden;color:white;}
