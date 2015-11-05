@@ -61,7 +61,7 @@
             $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*((6000*(6-level))-(2000*(6-level)))+(2000*(6-level))|0), easing: "linear", complete: function() {
                         $(this).velocity({scale: 0}, { duration: 200, complete: function() {
-                            $(this).text('-'+word.length).addClass('red');
+                            $(this).text('-'+word.length).addClass('red points');
                         }})
                         .velocity({ scale: 1 }, { duration: 200 })
                         .velocity({left: '-50%', top: '0px'},{ duration: 'slow', easing: [.76,0,.76,0], complete: function(){
@@ -83,7 +83,7 @@
         }
         
         function handleInput(e) {
-            var input = $('#input').text();
+            var input = $('#input').text().replace(/'/,'0');
             if (e.which === 8) { input = input.slice(0, -1); }
             else if (e.which === 13 || e.which === 0 || e.which === 32) {
                 if ($('.'+input).length > 0) {
@@ -91,7 +91,7 @@
                     $('.'+word).not('.green, .red').each(function() {
                         $(this).velocity("stop")
                         .velocity({scale: 0}, { duration: 200, complete: function() {
-                            $(this).text('+'+word.length).addClass('green');
+                            $(this).text('+'+word.length).addClass('green points');
                         }})
                         .velocity({ scale: 1 }, { duration: 200 })
                         .velocity({left: '-50%', top: '0px'},{ duration: 'slow', easing: [.76,0,.76,0], complete: function(){
@@ -105,29 +105,30 @@
                 }
             }
             else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
-            else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');
+            else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');;
             $('#acc').text(getAccuracy(input.length-1, paintRain(input, input.length-1)));
-            $('#input').text(input.replace(/0/,"'"));
             wpm += Math.round(input.length/5);
         }
         
         function paintRain(word, i) {
+console.log(word);
             var spansW = $('p[class^="'+word+'"] span').filter(function(){
                 return parseInt($(this).attr('class')) <= i;
             });
             $('p span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
+console.log(i+' '+spansW.length);
             if (i >= spansW.length) {
                 var spansR = $('p[class^="'+word.slice(0, -1)+'"] span').filter(function(){
                     return parseInt($(this).attr('class')) <= i;
                 });
                 $(spansR).css("color","white");
                 $('p[class^="'+word.slice(0, -1)+'"] span.'+i).css("color","red");
-                $('#input').css('color','red');
                 error = true;
+                $('#input').html('<span>'+word.slice(0,-1).replace(/0/,"'")+'</span><span class="red">'+word.slice(-1).replace(/0/,"'")+'</span>');
             } else {
                 error = false;
-                $('#input').css('color','white');
+                $('#input').html('<span>'+word.replace(/0/,"'")+'</span>');
             }                
             return spansW.length;
         }
@@ -196,8 +197,9 @@
         hr {position:absolute;color:red;width:100%;border:2px solid Red;padding:0;margin:0;}
         .rain {position:absolute;bottom:105%;color:DimGrey;margin:0px;width:100%;line-height:0px;padding:0px;text-align:center;font-size:75%;}
         #inputText {position:absolute;bottom:30px;height:30px;width:100%;padding:0px;outline-width:0;display:none;background-color:rgba(0, 0, 0, 0);color:white;border:0px;margin:0px;}
-        .red {color:Red;font-size:33%;}
-        .green {color:LawnGreen;font-size:33%;}
+        .red {color:Red;}
+        .green {color:LawnGreen;}
+        .points {font-size:33%;
     </style>
     </head>
     <body>
