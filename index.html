@@ -123,8 +123,12 @@
                 });
                 $(spansR).css("color","white");
                 $('p[class^="'+word.slice(0, -1)+'"] span.'+i).css("color","red");
+                $('#input').css('color','red');
                 error = true;
-            } else error = false;
+            } else {
+                error = false;
+                $('#input').css('color','white');
+            }                
             return spansW.length;
         }
         
