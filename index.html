@@ -39,7 +39,7 @@
             $('#win').velocity("fadeOut", { duration: 1500 });
             raining = true;
             restart();
-            rain = setInterval(rainTimer, 3000/level);
+            rain = setInterval(rainTimer, 500*(6-level));
             $('body').keydown(function(e) {
                 if (e.which === 8)
                     handleInput(e);
