@@ -35,10 +35,11 @@
                 wordArray =  words.match(/[a-zA-Z0]+/g);
             }
             $('#customText').blur();
-            $('#menu').velocity("fadeOut", { duration: 1500 });
-            $('#win').velocity("fadeOut", { duration: 1500 });
+            $('#menu').velocity("stop", true).velocity("fadeOut", { duration: 1000 });
+            $('#win').velocity("stop", true).velocity("fadeOut", { duration: 1000 });
             raining = true;
             restart();
+            rainTimer();
             rain = setInterval(rainTimer, 500*(6-level));
             $('body').keydown(function(e) {
                 if (e.which === 8)
@@ -51,7 +52,7 @@
             if (count == wordArray.length) return;
             var word = wordArray[count];
             $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
-                    .velocity({bottom: "20px"}, { duration: (Math.random()*(30000-10000)+10000|0)/level, easing: "linear", complete: function() {
+                    .velocity({bottom: "20px"}, { duration: (Math.random()*((6000*(6-level))-(2000*(6-level)))+(2000*(6-level))|0), easing: "linear", complete: function() {
                         $(this).velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('-'+word.length).addClass('red');
                         }})
@@ -133,10 +134,10 @@
             clearInterval(rain);
             raining = false;
             $('body').unbind();
-            $('p.rain').velocity("fadeOut", { duration: 1500, complete: function() { $(this).remove() }});
+            $('p.rain').velocity("fadeOut", { duration: 1000, complete: function() { $(this).remove() }});
             $('#level').text(level);
-            $('#win').velocity("fadeIn", { duration: 1500, complete: function() {
-                    $('#menu').velocity("fadeIn", { duration: 1500 });
+            $('#win').velocity("fadeIn", { duration: 1000, complete: function() {
+                    $('#menu').velocity("fadeIn", { duration: 1000 });
             }});
         }
         
@@ -196,7 +197,7 @@
     <div id='main'></div>
     <div id='menu'>
         <p>RainTyper</p>
-        <textarea id='customText' placeholder='Enter Text...'></textarea>
+        <textarea id='customText' placeholder='Enter Text...'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</textarea>
         <p>Press a number to choose your difficulty<br />[ 1 - 5 ]</p>
     </div>
     <div id='win'>Congragulations! You completed level <span id='level'></span>!</div>
