@@ -101,8 +101,8 @@
                             if (++rmCount == wordArray.length) win();
                         }});
                     });
+                    input = '';
                 }
-                input = '';
             }
             else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
             else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');
