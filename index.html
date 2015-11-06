@@ -121,7 +121,6 @@
             $('p.rain span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
             if (wordLength >= spansW.length) {
-            console.log('err');
                 var spansR = $('p[class^="'+word.slice(0, -1)+'"].rain span').filter(function(){
                     return parseInt($(this).attr('class')) <= wordLength;
                 });
