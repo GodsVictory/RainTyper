@@ -62,7 +62,7 @@
             var word = wordArray[count];
             $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*((6000*(6-level))-(2000*(6-level)))+(2000*(6-level))|0), easing: "linear", complete: function() {
-                        $(this).velocity({scale: 0}, { duration: 200, complete: function() {
+                        $(this).removeClass(word).velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('-'+word.length).addClass('red points');
                         }})
                         .velocity({ scale: 1 }, { duration: 200 })
@@ -72,16 +72,17 @@
                             if (points < 0) points = 0;
                             $('#points').text(points);
                             if (++rmCount == wordArray.length) win();
-                         }});
-                    }})
+                        }});
+                        var input = $('#input').text().slice(0,-1).replace(/'/,'0');
+                        if (input != '' && $('p[class^="'+input+'"]').length == 0) $('#input').text('');
+                    }});
 
             charArray = word.split('');
             $.each(charArray, function(i,val) {
                 val == 0 ? $('<span class="'+i+'">\'</span>').appendTo('p.'+count) : $('<span class="'+i+'">'+val+'</span>').appendTo('p.'+count);
             });
             count++;
-            var input = $('#input').text();
-            paintRain(input, input.length-1);
+            paintRain($('#input').text().replace(/'/,'0'));
         }
         
         function handleInput(e) {
@@ -108,22 +109,24 @@
             }
             else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
             else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');;
-            $('#acc').text(getAccuracy(input.length-1, paintRain(input, input.length-1)));
+            $('#acc').text(getAccuracy(input.length-1, paintRain(input)));
             wpm++;
         }
         
-        function paintRain(word, i) {
-            var spansW = $('p[class^="'+word+'"] span').filter(function(){
-                return parseInt($(this).attr('class')) <= i;
+        function paintRain(word) {
+            var wordLength=word.length-1;
+            var spansW = $('p[class^="'+word+'"].rain span').filter(function(){
+                return parseInt($(this).attr('class')) <= wordLength;
             });
-            $('p span').not(spansW).css("color","DimGrey");
+            $('p.rain span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
-            if (i >= spansW.length) {
-                var spansR = $('p[class^="'+word.slice(0, -1)+'"] span').filter(function(){
-                    return parseInt($(this).attr('class')) <= i;
+            if (wordLength >= spansW.length) {
+            console.log('err');
+                var spansR = $('p[class^="'+word.slice(0, -1)+'"].rain span').filter(function(){
+                    return parseInt($(this).attr('class')) <= wordLength;
                 });
                 $(spansR).css("color","white");
-                $('p[class^="'+word.slice(0, -1)+'"] span.'+i).css("color","red");
+                $('p[class^="'+word.slice(0, -1)+'"] span.'+wordLength).css("color","red");
                 error = true;
                 $('#input').html('<span>'+word.slice(0,-1).replace(/0/,"'")+'</span><span class="red">'+word.slice(-1).replace(/0/,"'")+'</span>');
             } else {
