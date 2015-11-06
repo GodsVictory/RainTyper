@@ -73,8 +73,7 @@
                             $('#points').text(points);
                             if (++rmCount == wordArray.length) win();
                         }});
-                        var input = $('#input').text().slice(0,-1).replace(/'/,'0');
-                        if (input != '' && $('p[class^="'+input+'"]').length == 0) $('#input').text('');
+                        if ((input.length-1) != 0 && $('p[class^="'+input.slice(0,-1)+'"]').length == 0) clearInput();
                     }});
 
             charArray = word.split('');
@@ -82,14 +81,13 @@
                 val == 0 ? $('<span class="'+i+'">\'</span>').appendTo('p.'+count) : $('<span class="'+i+'">'+val+'</span>').appendTo('p.'+count);
             });
             count++;
-            paintRain($('#input').text().replace(/'/,'0'));
+            paintRain();
         }
         
         function handleInput(e) {
-            var input = $('#input').text().replace(/'/,'0');
             if (e.which === 8) { input = input.slice(0, -1); }
             else if (e.which === 13 || e.which === 0 || e.which === 32) {
-                if ($('.'+input).length > 0) {
+                if (inputLength > -1) {
                     var word = input;
                     $('.'+word).not('.green, .red').each(function() {
                         $(this).velocity("stop")
@@ -104,44 +102,44 @@
                             if (++rmCount == wordArray.length) win();
                         }});
                     });
-                    input = '';
+                    clearInput();
                 }
             }
             else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
-            else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');;
-            $('#acc').text(getAccuracy(input.length-1, paintRain(input)));
+            else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');
+            inputLength = input.length-1;
             wpm++;
+            totalInput++;
+            if (paintRain()) totalCorrect++;
+            $('#acc').text(Math.round(totalCorrect/totalInput*100));
         }
         
-        function paintRain(word) {
-            var wordLength=word.length-1;
-            var spansW = $('p[class^="'+word+'"].rain span').filter(function(){
-                return parseInt($(this).attr('class')) <= wordLength;
+        function paintRain() {
+            var spansW = $('p[class^="'+input+'"].rain span').filter(function(){
+                return parseInt($(this).attr('class')) <= inputLength;
             });
             $('p.rain span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
-            if (wordLength >= spansW.length) {
-                var spansR = $('p[class^="'+word.slice(0, -1)+'"].rain span').filter(function(){
-                    return parseInt($(this).attr('class')) <= wordLength;
-                });
-                $(spansR).css("color","white");
-                $('p[class^="'+word.slice(0, -1)+'"] span.'+wordLength).css("color","red");
-                error = true;
-                $('#input').html('<span>'+word.slice(0,-1).replace(/0/,"'")+'</span><span class="red">'+word.slice(-1).replace(/0/,"'")+'</span>');
+            var inputFormat = input.replace(/0/,"'");
+            if (inputLength >= spansW.length) {
+                if (inputLength == 0)
+                    clearInput();
+                else {
+                    var inputSlice = input.slice(0,-1);
+                    var spansR = $('p[class^="'+inputSlice+'"].rain span').filter(function(){
+                        return parseInt($(this).attr('class')) <= inputLength;
+                    });
+                    $(spansR).css("color","white");
+                    $('p[class^="'+inputSlice+'"] span.'+inputLength).css("color","red");
+                    error = true;
+                    $('#input').html('<span>'+inputFormat.slice(0,-1)+'</span><span class="red">'+inputFormat.slice(-1)+'</span>');
+                    return false;
+                }
             } else {
                 error = false;
-                $('#input').html('<span>'+word.replace(/0/,"'")+'</span>');
+                $('#input').html('<span>'+inputFormat+'</span>');
+                return true;
             }                
-            return spansW.length;
-        }
-        
-        function getAccuracy(l, n) {
-            if (l < n) {
-                totalCorrect++;
-                totalInput++;
-            } else totalInput++;
-            acc = Math.round(totalCorrect/totalInput*100);
-            return acc;
         }
         
         function win() {
@@ -165,8 +163,17 @@
             $('#acc').text(acc);
             totalCorrect = 0;
             totalInput = 0;
+            clearInput();
         }
 
+        function clearInput() {
+            input = '';
+            inputLength = -1;
+            $('#input').text('');
+        }
+
+        var input = '';
+        var inputLength = -1;
         var raining = false;
         var rain;
         var level;
@@ -175,8 +182,8 @@
         var points = 0;
         var wpm = 0;
         var wpmArray = [];
-        var totalCorrect = 1;
-        var totalInput = 1;
+        var totalCorrect = 0;
+        var totalInput = 0;
         var acc = 0;
         var error = false;
         var wordArray = [];
