@@ -87,9 +87,11 @@
             else if (e.which === 13 || e.which === 0 || e.which === 32) {
                 if (inputLength > -1) {
                     var word = input;
-                    $('p.rain').filter(function() {
-                        return $(this).text().indexOf(word) === 0;
-                    }).not('.green, .red').each(function() {
+                    var p = $('p.rain').filter(function() {
+                        return $(this).text() === word;
+                    });
+                    if (p.length > 0) {
+                        $(p).not('.green, .red').each(function() {
                         $(this).velocity("stop")
                         .velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('+'+word.length).addClass('green points');
@@ -103,6 +105,7 @@
                         }});
                     });
                     clearInput();
+                    } else totalCorrect--;
                 }
             }
             else if (!error) input = input+String.fromCharCode(e.which);
