@@ -28,8 +28,6 @@
         });
         
         $(document).on("keypress", function (e) {
-            if (!/[a-z ']/i.test(String.fromCharCode(e.which)) && e.which !== 16)
-                e.preventDefault();
             pressedKey = parseInt(String.fromCharCode(e.which));
             if (!raining && pressedKey <= 5 && pressedKey >= 0) {
                 level = pressedKey;
@@ -40,8 +38,8 @@
         function startRain() {
             if ($('#customText').val() == '') return;
             else {
-                var words = $('#customText').val().replace(/[^a-zA-Z\r\n ']+/g,'').replace(/[']+/g,'0');
-                wordArray =  words.match(/[a-zA-Z0]+/g);
+                var words = $('#customText').val();
+                wordArray =  words.split(' ');
             }
             $('#customText').blur();
             $('#menu').velocity("stop", true).velocity("fadeOut", { duration: 1000 });
@@ -60,7 +58,7 @@
         function rainTimer() {
             if (count == wordArray.length) return;
             var word = wordArray[count];
-            $('<p class="'+word+' '+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
+            $('<p class="'+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*((6000*(6-level))-(2000*(6-level)))+(2000*(6-level))|0), easing: "linear", complete: function() {
                         $(this).removeClass(word).velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('-'+word.length).addClass('red points');
@@ -89,7 +87,9 @@
             else if (e.which === 13 || e.which === 0 || e.which === 32) {
                 if (inputLength > -1) {
                     var word = input;
-                    $('.'+word).not('.green, .red').each(function() {
+                    $('p.rain').filter(function() {
+                        return $(this).text().indexOf(word) === 0;
+                    }).not('.green, .red').each(function() {
                         $(this).velocity("stop")
                         .velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('+'+word.length).addClass('green points');
@@ -105,8 +105,7 @@
                     clearInput();
                 }
             }
-            else if (!(/[a-zA-Z']/i).test(String.fromCharCode(e.which))) return;
-            else if (!error) input = input+String.fromCharCode(e.which).replace(/'/,'0');
+            else if (!error) input = input+String.fromCharCode(e.which);
             inputLength = input.length-1;
             wpm++;
             totalInput++;
@@ -115,22 +114,28 @@
         }
         
         function paintRain() {
-            var spansW = $('p[class^="'+input+'"].rain span').filter(function(){
+            var spansW = $('p.rain').filter(function(){
+                return $(this).text().indexOf(input) === 0;
+            }).children().filter(function(){
                 return parseInt($(this).attr('class')) <= inputLength;
             });
             $('p.rain span').not(spansW).css("color","DimGrey");
             $(spansW).css("color","white");
-            var inputFormat = input.replace(/0/,"'");
+            var inputFormat = input;
             if (inputLength >= spansW.length) {
                 if (inputLength == 0)
                     clearInput();
                 else {
                     var inputSlice = input.slice(0,-1);
-                    var spansR = $('p[class^="'+inputSlice+'"].rain span').filter(function(){
-                        return parseInt($(this).attr('class')) <= inputLength;
+                    var p = $('p.rain').filter(function(){
+                        return $(this).text().indexOf(inputSlice) === 0;
                     });
-                    $(spansR).css("color","white");
-                    $('p[class^="'+inputSlice+'"] span.'+inputLength).css("color","red");
+                    $(p).children().filter(function(){
+                        return parseInt($(this).attr('class')) <= inputLength;
+                    }).css("color","white");
+                    $(p).children().filter(function(){
+                       return parseInt($(this).attr('class')) === inputLength;
+                    }).css("color","red");
                     error = true;
                     $('#input').html('<span>'+inputFormat.slice(0,-1)+'</span><span class="red">'+inputFormat.slice(-1)+'</span>');
                     return false;
