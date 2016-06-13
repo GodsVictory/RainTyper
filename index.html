@@ -58,7 +58,7 @@
         function rainTimer() {
             if (count == wordArray.length) return;
             var word = wordArray[count];
-            $('<p class="'+count+' rain"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
+            $('<p class="'+count+' rain '+word+'"></p>').css('left',((Math.random()*(50-0)+0|0)-25)+'%').appendTo('#main')
                     .velocity({bottom: "20px"}, { duration: (Math.random()*((6000*(6-level))-(2000*(6-level)))+(2000*(6-level))|0), easing: "linear", complete: function() {
                         $(this).removeClass(word).velocity({scale: 0}, { duration: 200, complete: function() {
                             $(this).text('-'+word.length).addClass('red points');
@@ -71,7 +71,7 @@
                             $('#points').text(points);
                             if (++rmCount == wordArray.length) win();
                         }});
-                        if ((input.length-1) != 0 && $('p[class^="'+input.slice(0,-1)+'"]').length == 0) clearInput();
+                        if ((input.length-1) != 0 && $('p[class^="'+input.slice(0,-1)+'"],p[class*= "'+input.slice(0,-1)+'"]').length == 0) clearInput();
                     }});
 
             charArray = word.split('');
